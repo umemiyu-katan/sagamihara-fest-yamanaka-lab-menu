@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>学園祭メニュー</title>
+  <meta name="description" content="学園祭出店のメニュー" />
+  <!-- 必要なら検索避け: 公開したい場合はこの1行を削除 -->
+  <meta name="robots" content="noindex" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #111111;
+      --muted: #6b7280;
+      --accent: #0ea5a0;
+      --card: #f8f9fa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    header {
+      padding: 24px 16px 12px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+    h1 { margin: 0 0 8px; font-size: 2rem; }
+    #notice { color: var(--muted); font-size: 0.95rem; }
+    .container { max-width: 960px; margin: 0 auto; padding: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 12px;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .card.soldout::after {
+      content: "売切れ";
+      position: absolute; top: 12px; right: 12px;
+      padding: 4px 8px; border-radius: 999px; border: 1px solid #999;
+      color: #999; font-size: 0.85rem; background: #fff;
+    }
+    .card img { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; }
+    .item-title { font-size: 1.1rem; font-weight: 700; margin: 8px 0 4px; }
+    .price { font-size: 1.05rem; }
+    .badges { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .badge { font-size: 0.8rem; padding: 2px 8px; border-radius: 999px; background: #e9ecef; }
+    .allergen { background: #fff3cd; border: 1px solid #ffe8a1; }
+    .footer { text-align: center; color: #888; font-size: 0.85rem; padding: 24px 16px; }
+    .search { margin: 12px auto 0; max-width: 480px; }
+    .search input { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 12px; font-size: 16px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>学園祭メニュー</h1>
+    <div id="notice">価格は税込。アレルゲン：卵 / 乳 / 小麦 / そば / 落花生 / えび / かに</div>
+    <div class="search">
+      <input id="q" type="search" placeholder="キーワードで絞り込み（例：アイス / ホット / からあげ）" />
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid" id="list">
+      <!-- ▼ 1カードのテンプレ（複製して使う） -->
+      <article class="card" data-tags="アイス パン 甘い">
+        <img src="images/ice-dog.jpg" alt="アイスドッグ" />
+        <div class="item-title">アイスドッグ</div>
+        <div class="price">400円</div>
+        <div class="badges">
+          <span class="badge">冷たい</span>
+          <span class="badge allergen">小麦</span>
+          <span class="badge allergen">乳</span>
+        </div>
+      </article>
+
+      <article class="card" data-tags="揚げアイス 甘い">
+        <img src="images/fried-ice.jpg" alt="揚げアイス" />
+        <div class="item-title">揚げアイス</div>
+        <div class="price">500円</div>
+        <div class="badges">
+          <span class="badge">あったかい×冷たい</span>
+          <span class="badge allergen">小麦</span>
+          <span class="badge allergen">乳</span>
+          <span class="badge allergen">卵</span>
+        </div>
+      </article>
+      <!-- ▲ ここまでテンプレ → 以降、同様に増やしてください -->
+    </div>
+  </main>
+
+  <footer class="footer">売切時はカードに class="soldout" を付与 / 残数は黒板やSNSで案内</footer>
+
+  <script>
+    // 簡易検索フィルタ（タイトル・タグ・バッジを対象）
+    const q = document.getElementById('q');
+    const cards = [...document.querySelectorAll('.card')];
+    q.addEventListener('input', () => {
+      const v = q.value.trim().toLowerCase();
+      cards.forEach(c => {
+        const t = (c.dataset.tags + ' ' + c.innerText).toLowerCase();
+        c.classList.toggle('hidden', v && !t.includes(v));
+      });
+    });
+  </script>
+</body>
+</html>
